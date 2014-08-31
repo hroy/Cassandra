@@ -1,0 +1,33 @@
+/usr/local/apache-cassandra-1.1.6/bin/cqlsh -3 csac0
+
+DROP KEYSPACE hxr121830;
+
+CREATE KEYSPACE hxr121830 WITH strategy_class = SimpleStrategy
+ AND strategy_options:replication_factor = 1;
+ 
+USE hxr121830;
+
+1.
+CREATE TABLE movies(
+	MovieID varchar PRIMARY KEY,
+	Title varchar,
+	Genres varchar
+);
+
+2.
+COPY movies FROM '/tmp/HW4_Data/movies.dat' with DELIMITER='#';
+
+3.
+COPY movies FROM STDIN with DELIMITER='#';
+1162#New Comedy Movie#Comedy
+\.
+
+or 
+
+INSERT INTO movies(MovieID, Title, Genres) VALUES ('1162', 'New Comedy Movie', 'Comedy');
+
+4.
+TRUNCATE movies;
+
+5.
+DROP TABLE movies;

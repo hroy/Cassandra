@@ -1,0 +1,75 @@
+/usr/local/apache-cassandra-1.1.6/bin/cassandra-cli --host csac0
+
+DROP KEYSPACE hxr121830;
+
+CREATE KEYSPACE hxr121830
+with placement_strategy = 'org.apache.cassandra.locator.SimpleStrategy'
+and strategy_options = {replication_factor:1};
+
+USE hxr121830;
+
+1.
+DROP COLUMN FAMILY movies;
+
+CREATE COLUMN FAMILY movies
+WITH comparator =UTF8Type
+AND key_validation_class=UTF8Type
+AND column_metadata = [
+{column_name: MovieID, validation_class: UTF8Type}
+{column_name: Title, validation_class: UTF8Type}
+{column_name: Genres, validation_class: UTF8Type}
+];
+
+2.1
+SET movies['70']['MovieID']='70';
+SET movies['70']['Title']='From Dusk Till Dawn (1996)';
+SET movies['70']['Genres']='Action|Comedy|Crime|Horror|Thriller';
+
+2.2
+SET movies['83']['MovieID']='83';
+SET movies['83']['Title']='Once Upon a Time When We Were Colored (1995)';
+SET movies['83']['Genres']='Drama';
+
+2.3
+SET movies['112']['MovieID']='112' WITH ttl=300;
+SET movies['112']['Title']='Escape from New York (1981)' WITH ttl=300;
+SET movies['112']['Genres']='Action|Adventure|Sci-Fi|Thriller' WITH ttl=300;
+
+3.
+DROP COLUMN FAMILY movies;
+
+CREATE COLUMN FAMILY movies
+WITH comparator =UTF8Type
+AND key_validation_class=UTF8Type
+AND column_metadata = [
+{column_name: MovieID, validation_class: UTF8Type}
+{column_name: Title, validation_class: UTF8Type}
+{column_name: Genres, validation_class: UTF8Type}
+];
+
+SET movies ['From Dusk Till Dawn (1996)']['MovieID']='70';
+SET movies ['From Dusk Till Dawn (1996)']['Title']='From Dusk Till Dawn (1996)';
+SET movies ['From Dusk Till Dawn (1996)']['Genres']='Action|Comedy|Crime|Horror|Thriller';
+
+SET movies ['Once Upon a Time When We Were Colored (1995)']['MovieID']='83';
+SET movies ['Once Upon a Time When We Were Colored (1995)']['Title']='Once Upon a Time When We Were Colored (1995)';
+SET movies ['Once Upon a Time When We Were Colored (1995)']['Genres']='Drama';
+
+SET movies ['Escape from New York (1981)']['MovieID']='112' WITH ttl=300;
+SET movies ['Escape from New York (1981)']['Title']='Escape from New York (1981)' WITH ttl=300;
+SET movies ['Escape from New York (1981)']['Genres']='Action|Adventure|Sci-Fi|Thriller' WITH ttl=300;
+
+3.1
+GET movies [utf8('Escape from New York (1981)')];
+
+3.2
+list movies;
+
+3.3
+DEL movies ['Escape from New York (1981)']['Genres'];
+
+3.4
+DROP COLUMN FAMILY movies;
+
+4.
+DESCRIBE hxr121830;
